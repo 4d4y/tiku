@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cloudflare在线题库</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>技术知识测试</h1>
+        <div id="quiz-container"></div>
+        <button onclick="submitAnswers()">提交答案</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // 加载题库
+        let userAnswers = {};
+        
+        fetch('./questions.json')
+            .then(res => res.json())
+            .then(questions => {
+                const container = document.getElementById('quiz-container');
+                questions.forEach(q => {
+                    const div = document.createElement('div');
+                    div.className = 'question-box';
+                    div.innerHTML = `
+                        <h3>${q.id}. ${q.question}</h3>
+                        ${q.options.map(opt => `
+                            <label>
+                                <input type="radio" name="q${q.id}" value="${opt}">
+                                ${opt}
+                            </label><br>
+                        `).join('')}
+                    `;
+                    container.appendChild(div);
+                });
+            });
+
+        // 答案提交验证
+        function submitAnswers() {
+            const inputs = document.querySelectorAll('input[type="radio"]:checked');
+            inputs.forEach(input => {
+                userAnswers[input.name.replace('q', '')] = input.value;
+            });
+
+            fetch('./questions.json')
+                .then(res => res.json())
+                .then(questions => {
+                    let correctCount = 0;
+                    questions.forEach(q => {
+                        if (userAnswers[q.id] === q.answer) correctCount++;
+                    });
+                    
+                    document.getElementById('result').innerHTML = `
+                        <h3>测试结果</h3>
+                        <p>正确率：${correctCount}/${questions.length}</p>
+                    `;
+                });
+        }
+    </script>
+</body>
+</html>
