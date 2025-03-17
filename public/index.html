@@ -1,62 +1,88 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cloudflare在线题库</title>
+    <title>实时题库测试</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>技术知识测试</h1>
+        <h1>实时知识测验</h1>
         <div id="quiz-container"></div>
-        <button onclick="submitAnswers()">提交答案</button>
-        <div id="result"></div>
+        <div id="total-result"></div>
     </div>
 
     <script>
-        // 加载题库
-        let userAnswers = {};
+        let questionsData = []; // 存储题库数据
         
+        // 加载题库并初始化
         fetch('./questions.json')
             .then(res => res.json())
             .then(questions => {
-                const container = document.getElementById('quiz-container');
-                questions.forEach(q => {
-                    const div = document.createElement('div');
-                    div.className = 'question-box';
-                    div.innerHTML = `
-                        <h3>${q.id}. ${q.question}</h3>
+                questionsData = questions;
+                renderQuestions(questions);
+            });
+
+        function renderQuestions(questions) {
+            const container = document.getElementById('quiz-container');
+            
+            questions.forEach(q => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-box';
+                questionDiv.innerHTML = `
+                    <h3>${q.id}. ${q.question}</h3>
+                    <div class="options" id="options-${q.id}">
                         ${q.options.map(opt => `
                             <label>
                                 <input type="radio" name="q${q.id}" value="${opt}">
                                 ${opt}
-                            </label><br>
+                            </label>
                         `).join('')}
-                    `;
-                    container.appendChild(div);
-                });
-            });
-
-        // 答案提交验证
-        function submitAnswers() {
-            const inputs = document.querySelectorAll('input[type="radio"]:checked');
-            inputs.forEach(input => {
-                userAnswers[input.name.replace('q', '')] = input.value;
-            });
-
-            fetch('./questions.json')
-                .then(res => res.json())
-                .then(questions => {
-                    let correctCount = 0;
-                    questions.forEach(q => {
-                        if (userAnswers[q.id] === q.answer) correctCount++;
+                    </div>
+                    <div class="feedback" id="feedback-${q.id}"></div>
+                `;
+                
+                container.appendChild(questionDiv);
+                
+                // 为每个选项添加事件监听
+                const radios = questionDiv.querySelectorAll('input[type="radio"]');
+                radios.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        checkAnswer(q.id, e.target.value);
+                        updateTotalResult();
                     });
-                    
-                    document.getElementById('result').innerHTML = `
-                        <h3>测试结果</h3>
-                        <p>正确率：${correctCount}/${questions.length}</p>
-                    `;
                 });
+            });
+        }
+
+        // 实时验证答案
+        function checkAnswer(questionId, selectedAnswer) {
+            const question = questionsData.find(q => q.id === questionId);
+            const feedbackDiv = document.getElementById(`feedback-${questionId}`);
+            
+            if (!question) return;
+
+            if (selectedAnswer === question.answer) {
+                feedbackDiv.innerHTML = `✅ 正确！正确答案是：${question.answer}`;
+                feedbackDiv.className = 'feedback correct';
+            } else {
+                feedbackDiv.innerHTML = `❌ 错误，正确答案是：${question.answer}`;
+                feedbackDiv.className = 'feedback incorrect';
+            }
+        }
+
+        // 更新全局统计
+        function updateTotalResult() {
+            const correctCount = questionsData.filter(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                return selected && selected.value === q.answer;
+            }).length;
+            
+            document.getElementById('total-result').innerHTML = `
+                <h3>当前正确率：${correctCount}/${questionsData.length}</h3>
+            `;
         }
     </script>
 </body>
 </html>
+
