@@ -1,46 +1,30 @@
-/* 新增导航按钮样式（添加在现有CSS后面） */
-.navigation button {
-  flex: 1;
-  padding: 12px 25px;
+/* 修复选项排列 */
+.options {
+  display: flex !important;        /* 强制启用flex布局‌:ml-citation{ref="6" data="citationList"} */
+  flex-direction: column;          /* 垂直排列‌:ml-citation{ref="3" data="citationList"} */
+  gap: 12px;                       /* 保持选项间距 */
+  margin: 15px 0;
+}
+
+.options label {
+  display: flex !important;        /* 保持内部元素对齐‌:ml-citation{ref="7" data="citationList"} */
+  width: 100%;                     /* 强制占满整行‌:ml-citation{ref="3" data="citationList"} */
+  box-sizing: border-box;           /* 防止溢出‌:ml-citation{ref="6" data="citationList"} */
+  
+  /* 原有样式保留 */
+  align-items: center;
+  padding: 14px 20px;
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 16px;
-  font-weight: 500;
-  border: none;
+  transition: all 0.2s ease;
 }
 
-/* 上一题按钮 */
-#prev-btn {
-  background: #95a5a6;  /* 中性灰色 */
-  color: white;
-}
-
-#prev-btn:hover:not(:disabled) {
-  background: #7f8c8d;  /* 深灰色悬停 */
-}
-
-/* 下一题按钮 */
-#next-btn {
-  background: #3498db;  /* 主题蓝色 */
-  color: white;
-}
-
-#next-btn:hover:not(:disabled) {
-  background: #2980b9;  /* 深蓝色悬停 */
-}
-
-/* 禁用状态 */
-.navigation button:disabled {
-  background: #bdc3c7 !important;  /* 浅灰色 */
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-/* 移动端适配 */
+/* 移动端适配优化 */
 @media (max-width: 480px) {
-  .navigation {
-    flex-direction: column;
-    gap: 10px;
+  .options label {
+    flex-wrap: nowrap;            /* 防止内容换行‌:ml-citation{ref="6" data="citationList"} */
+    padding: 12px 16px;
   }
 }
