@@ -1,34 +1,4 @@
-/* 在原有样式基础上添加 */
-.navigation {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 25px;
-  gap: 15px;
-}
-
-#prev-btn {
-  /* 中性色表示返回操作 */
-  background-color: #95a5a6;
-  border: 1px solid #7f8c8d;
-  color: white;
-}
-
-#prev-btn:hover:not(:disabled) {
-  background-color: #7f8c8d;
-}
-
-#next-btn {
-  /* 主题色表示前进操作 */
-  background-color: #3498db;
-  border: 1px solid #2980b9;
-  color: white;
-}
-
-#next-btn:hover:not(:disabled) {
-  background-color: #2980b9;
-}
-
-/* 通用按钮样式 */
+/* 新增导航按钮样式（添加在现有CSS后面） */
 .navigation button {
   flex: 1;
   padding: 12px 25px;
@@ -37,24 +7,40 @@
   transition: all 0.3s ease;
   font-size: 16px;
   font-weight: 500;
+  border: none;
 }
 
-/* 禁用状态样式 */
+/* 上一题按钮 */
+#prev-btn {
+  background: #95a5a6;  /* 中性灰色 */
+  color: white;
+}
+
+#prev-btn:hover:not(:disabled) {
+  background: #7f8c8d;  /* 深灰色悬停 */
+}
+
+/* 下一题按钮 */
+#next-btn {
+  background: #3498db;  /* 主题蓝色 */
+  color: white;
+}
+
+#next-btn:hover:not(:disabled) {
+  background: #2980b9;  /* 深蓝色悬停 */
+}
+
+/* 禁用状态 */
 .navigation button:disabled {
-  opacity: 0.6;
+  background: #bdc3c7 !important;  /* 浅灰色 */
   cursor: not-allowed;
-  background-color: #bdc3c7;
-  border-color: #95a5a6;
+  opacity: 0.8;
 }
 
 /* 移动端适配 */
 @media (max-width: 480px) {
   .navigation {
     flex-direction: column;
-  }
-  
-  .navigation button {
-    width: 100%;
-    padding: 10px 20px;
+    gap: 10px;
   }
 }
