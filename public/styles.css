@@ -1,30 +1,78 @@
-/* 修复选项排列 */
+/* 综合修复方案 - 颜色与布局共存 */
+.quiz-container {
+  /* 创建新的堆叠上下文防止样式污染 */
+  isolation: isolate; 
+}
+
+/* 选项布局修复（带颜色保护） */
 .options {
-  display: flex !important;        /* 强制启用flex布局‌:ml-citation{ref="6" data="citationList"} */
-  flex-direction: column;          /* 垂直排列‌:ml-citation{ref="3" data="citationList"} */
-  gap: 12px;                       /* 保持选项间距 */
+  display: flex !important;
+  flex-direction: column;
+  gap: 12px;
   margin: 15px 0;
 }
 
 .options label {
-  display: flex !important;        /* 保持内部元素对齐‌:ml-citation{ref="7" data="citationList"} */
-  width: 100%;                     /* 强制占满整行‌:ml-citation{ref="3" data="citationList"} */
-  box-sizing: border-box;           /* 防止溢出‌:ml-citation{ref="6" data="citationList"} */
+  /* 布局核心属性 */
+  display: flex !important;
+  width: 100%;
+  box-sizing: border-box;
   
-  /* 原有样式保留 */
+  /* 颜色保护层 */
+  background: var(--option-bg, #ffffff) !important;
+  border: 2px solid var(--option-border, #e0e0e0) !important;
+  color: var(--option-text, #2c3e50) !important;
+  
+  /* 原有布局属性 */
   align-items: center;
   padding: 14px 20px;
-  background: #ffffff;
-  border: 2px solid #e0e0e0;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-/* 移动端适配优化 */
+/* 选中状态颜色强化 */
+.options label.selected {
+  --option-bg: #3498db !important;  /* 使用CSS变量覆盖 */
+  --option-border: #3498db !important;
+  --option-text: white !important;
+}
+
+/* 导航按钮颜色保护 */
+.navigation button {
+  /* 原有布局属性保留 */
+  flex: 1;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  
+  /* 颜色保护机制 */
+  background-color: var(--btn-bg) !important;
+  color: var(--btn-text) !important;
+}
+
+#prev-btn {
+  --btn-bg: #95a5a6;
+  --btn-text: white;
+}
+
+#next-btn {
+  --btn-bg: #3498db;
+  --btn-text: white;
+}
+
+/* 移动端双重保护 */
 @media (max-width: 480px) {
   .options label {
-    flex-wrap: nowrap;            /* 防止内容换行‌:ml-citation{ref="6" data="citationList"} */
-    padding: 12px 16px;
+    min-height: 52px;  /* 防止内容挤压 */
+    flex-wrap: nowrap;
+  }
+  
+  .navigation button {
+    background-color: var(--btn-bg) !important;  /* 移动端二次声明 */
   }
 }
