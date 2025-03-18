@@ -1,62 +1,78 @@
-/* 导航按钮容器 - 基础样式 */
-.navigation {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-top: 30px;
+/* 综合修复方案 - 颜色与布局共存 */
+.quiz-container {
+  /* 创建新的堆叠上下文防止样式污染 */
+  isolation: isolate; 
 }
 
-/* 导航按钮通用样式 */
+/* 选项布局修复（带颜色保护） */
+.options {
+  display: flex !important;
+  flex-direction: column;
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.options label {
+  /* 布局核心属性 */
+  display: flex !important;
+  width: 100%;
+  box-sizing: border-box;
+  
+  /* 颜色保护层 */
+  background: var(--option-bg, #ffffff) !important;
+  border: 2px solid var(--option-border, #e0e0e0) !important;
+  color: var(--option-text, #2c3e50) !important;
+  
+  /* 原有布局属性 */
+  align-items: center;
+  padding: 14px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* 选中状态颜色强化 */
+.options label.selected {
+  --option-bg: #3498db !important;  /* 使用CSS变量覆盖 */
+  --option-border: #3498db !important;
+  --option-text: white !important;
+}
+
+/* 导航按钮颜色保护 */
 .navigation button {
+  /* 原有布局属性保留 */
   flex: 1;
-  padding: 14px 25px;
+  padding: 12px 25px;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 16px;
   font-weight: 500;
   border: none;
+  
+  /* 颜色保护机制 */
+  background-color: var(--btn-bg) !important;
+  color: var(--btn-text) !important;
 }
 
-/* 电脑端优化 */
-@media (min-width: 769px) {
-  .navigation {
-    max-width: 600px;  /* 限制最大宽度避免过度拉伸 */
-    margin-left: auto;
-    margin-right: auto;
-  }
+#prev-btn {
+  --btn-bg: #95a5a6;
+  --btn-text: white;
 }
 
-/* 移动端适配修正 */
-@media (max-width: 768px) {
-  .navigation {
-    flex-direction: row !important;  /* 强制保持水平排列 */
-    gap: 10px;
-    padding: 0 12px;
-  }
-
-  .navigation button {
-    min-width: 120px;  /* 防止文字换行 */
-    padding: 12px 15px;
-    font-size: 14px;
-    flex: none;        /* 禁用等分宽度 */
-    width: calc(50% - 5px); /* 精确计算宽度 */
-  }
-
-  /* 按钮间距修正 */
-  #prev-btn {
-    margin-right: 5px;
-  }
-  #next-btn {
-    margin-left: 5px;
-  }
+#next-btn {
+  --btn-bg: #3498db;
+  --btn-text: white;
 }
 
-/* 超小屏幕二次适配 (例如全面屏手机) */
+/* 移动端双重保护 */
 @media (max-width: 480px) {
+  .options label {
+    min-height: 52px;  /* 防止内容挤压 */
+    flex-wrap: nowrap;
+  }
+  
   .navigation button {
-    width: calc(50% - 3px);  /* 更紧凑的布局 */
-    padding: 10px 12px;
-    font-size: 13px;
+    background-color: var(--btn-bg) !important;  /* 移动端二次声明 */
   }
 }
