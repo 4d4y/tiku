@@ -1,74 +1,31 @@
-[
-  {
-    "id": 1,
-    "question": "《食品安全法》中的食品是指各种供人（   ）成品和原料以及按照传统既是 食品又是药品的物品，但是不包括以治疗为目的物品。",
-    "options": ["吃的", "饮用的", "食用或者饮用的", "其他的"],
-    "answer": "食用或者饮用的"
-  },
-  {
-    "id": 2,
-    "question": "我国标准分为（   ）。",
-    "options": ["国家标准、专业标准、地方标准和企业标准", "国家标准、行业标准、地方标准和企业标准", "国际标准、国家标准、部门标准和内部标准", "国际标准、国家标准、地方标准和企业标准"],
-    "answer": "国家标准、行业标准、地方标准和企业标准"
-  }, 
-  {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, 
-  {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, 
-  {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, 
-  {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, 
-  {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, 
-  {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, 
-  {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, 
-  {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, 
-  {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, 
-  {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }  
-]
+// questions.json
+{
+  "categories": [
+    {
+      "id": "HIS",
+      "name": "历史",
+      "questions": [
+        {
+          "id": 1,
+          "question": "中国的首都是哪个城市？",
+          "options": ["上海", "北京", "广州", "深圳"],
+          "answer": "北京",
+          "explanation": "北京是中国的政治和文化中心"
+        }
+      ]
+    },
+    {
+      "id": "GEO",
+      "name": "地理",
+      "questions": [
+        {
+          "id": 1,
+          "question": "世界上最长的河流是？",
+          "options": ["尼罗河", "亚马逊河", "长江", "密西西比河"],
+          "answer": "尼罗河",
+          "explanation": "尼罗河全长6650公里"
+        }
+      ]
+    }
+  ]
+}
