@@ -2,87 +2,181 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>实时题库测试</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类题库测试</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>实时知识测验</h1>
-        <div id="quiz-container"></div>
+        <h1>分类知识测验</h1>
+        <div class="controls">
+            <select id="mode-select">
+                <option value="sequential">顺序出题</option>
+                <option value="random">随机出题</option>
+            </select>
+            <button id="start-btn">开始测验</button>
+        </div>
+        <div id="quiz-container">
+            <div class="loading">请选择测验模式后点击开始</div>
+        </div>
+        <div class="navigation">
+            <button id="prev-btn" disabled>上一题</button>
+            <span id="progress"></span>
+            <button id="next-btn" disabled>下一题</button>
+        </div>
         <div id="total-result"></div>
     </div>
 
-    <script>
-        let questionsData = []; // 存储题库数据
+<script>
+const quizState = {
+    questions: [],
+    currentIndex: -1,
+    mode: 'sequential',
+    userAnswers: {},
+    questionOrder: []
+};
+
+// 初始化控件
+document.getElementById('mode-select').addEventListener('change', e => {
+    quizState.mode = e.target.value;
+});
+
+document.getElementById('start-btn').addEventListener('click', initQuiz);
+document.getElementById('prev-btn').addEventListener('click', showPreviousQuestion);
+document.getElementById('next-btn').addEventListener('click', showNextQuestion);
+
+async function initQuiz() {
+    try {
+        const response = await fetch('./questions.json');
+        if (!response.ok) throw new Error('题库加载失败');
+        const data = await response.json();
         
-        // 加载题库并初始化
-        fetch('./questions.json')
-            .then(res => res.json())
-            .then(questions => {
-                questionsData = questions;
-                renderQuestions(questions);
-            });
+        // 合并所有分类题目并添加分类前缀
+        quizState.questions = data.categories.flatMap(category => 
+            category.questions.map(q => ({
+                ...q,
+                fullId: `${category.id}-${q.id}`,
+                category: category.name
+            }))
+        );
+        
+        prepareQuestions();
+        quizState.currentIndex = 0;
+        updateControls();
+        renderQuestion();
+    } catch (error) {
+        showError(error.message);
+    }
+}
 
-        function renderQuestions(questions) {
-            const container = document.getElementById('quiz-container');
-            
-            questions.forEach(q => {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'question-box';
-                questionDiv.innerHTML = `
-                    <h3>${q.id}. ${q.question}</h3>
-                    <div class="options" id="options-${q.id}">
-                        ${q.options.map(opt => `
-                            <label>
-                                <input type="radio" name="q${q.id}" value="${opt}">
-                                ${opt}
-                            </label>
-                        `).join('')}
-                    </div>
-                    <div class="feedback" id="feedback-${q.id}"></div>
-                `;
-                
-                container.appendChild(questionDiv);
-                
-                // 为每个选项添加事件监听
-                const radios = questionDiv.querySelectorAll('input[type="radio"]');
-                radios.forEach(radio => {
-                    radio.addEventListener('change', (e) => {
-                        checkAnswer(q.id, e.target.value);
-                        updateTotalResult();
-                    });
-                });
-            });
+function prepareQuestions() {
+    if (quizState.mode === 'random') {
+        // Fisher-Yates shuffle算法
+        const arr = [...Array(quizState.questions.length).keys()];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
         }
+        quizState.questionOrder = arr;
+    } else {
+        quizState.questionOrder = [...Array(quizState.questions.length).keys()];
+    }
+}
 
-        // 实时验证答案
-        function checkAnswer(questionId, selectedAnswer) {
-            const question = questionsData.find(q => q.id === questionId);
-            const feedbackDiv = document.getElementById(`feedback-${questionId}`);
-            
-            if (!question) return;
+function renderQuestion() {
+    const index = quizState.questionOrder[quizState.currentIndex];
+    const question = quizState.questions[index];
+    const container = document.getElementById('quiz-container');
+    
+    container.innerHTML = `
+        <div class="question-box">
+            <div class="category">分类：${question.category}</div>
+            <h3>${question.fullId}. ${question.question}</h3>
+            <div class="options">
+                ${question.options.map(opt => `
+                    <label>
+                        <input type="radio" name="current" value="${opt}" 
+                            ${quizState.userAnswers[question.fullId] === opt ? 'checked' : ''}>
+                        <span class="custom-radio"></span>
+                        <span class="option-text">${opt}</span>
+                    </label>
+                `).join('')}
+            </div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+    `;
 
-            if (selectedAnswer === question.answer) {
-                feedbackDiv.innerHTML = `✅ 正确！正确答案是：${question.answer}`;
-                feedbackDiv.className = 'feedback correct';
-            } else {
-                feedbackDiv.innerHTML = `❌ 错误，正确答案是：${question.answer}`;
-                feedbackDiv.className = 'feedback incorrect';
-            }
-        }
+    // 为选项添加事件监听
+    container.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const userAnswer = e.target.value;
+            quizState.userAnswers[question.fullId] = userAnswer;
+            checkAnswer(question, userAnswer);
+            updateTotalResult();
+            updateControls();
+        });
+    });
 
-        // 更新全局统计
-        function updateTotalResult() {
-            const correctCount = questionsData.filter(q => {
-                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
-                return selected && selected.value === q.answer;
-            }).length;
-            
-            document.getElementById('total-result').innerHTML = `
-                <h3>当前正确率：${correctCount}/${questionsData.length}</h3>
-            `;
-        }
-    </script>
+    updateProgress();
+}
+
+function checkAnswer(question, selectedAnswer) {
+    const feedbackDiv = document.getElementById('feedback');
+    feedbackDiv.className = `feedback ${selectedAnswer === question.answer ? 
+        'correct' : 'incorrect'} visible`;
+    
+    feedbackDiv.innerHTML = selectedAnswer === question.answer ?
+        `✅ 正确！${question.explanation || ''}` :
+        `❌ 错误，正确答案：${question.answer}${question.explanation ? 
+            `（${question.explanation}）` : ''}`;
+}
+
+function showPreviousQuestion() {
+    if (quizState.currentIndex > 0) {
+        quizState.currentIndex--;
+        renderQuestion();
+        updateControls();
+    }
+}
+
+function showNextQuestion() {
+    if (quizState.currentIndex < quizState.questionOrder.length - 1) {
+        quizState.currentIndex++;
+        renderQuestion();
+        updateControls();
+    }
+}
+
+function updateControls() {
+    document.getElementById('prev-btn').disabled = quizState.currentIndex === 0;
+    document.getElementById('next-btn').disabled = 
+        quizState.currentIndex === quizState.questionOrder.length - 1;
+}
+
+function updateProgress() {
+    const progress = document.getElementById('progress');
+    progress.textContent = `第 ${quizState.currentIndex + 1} 题 / 共 ${quizState.questionOrder.length} 题`;
+}
+
+function updateTotalResult() {
+    const correctCount = Object.keys(quizState.userAnswers).filter(fullId => {
+        const question = quizState.questions.find(q => q.fullId === fullId);
+        return quizState.userAnswers[fullId] === question.answer;
+    }).length;
+
+    const resultDiv = document.getElementById('total-result');
+    resultDiv.innerHTML = `
+        <div class="result-box">
+            已答对：${correctCount} 题 (${Math.round((correctCount/quizState.questionOrder.length)*100)}%)
+        </div>
+    `;
+}
+
+function showError(message) {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = `<div class="error">${message}</div>`;
+}
+</script>
 </body>
 </html>
-
