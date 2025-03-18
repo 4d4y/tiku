@@ -1,57 +1,60 @@
-/* 修改以下关键样式 */
-.options {
+/* 在原有样式基础上添加 */
+.navigation {
   display: flex;
-  flex-direction: column; /* 垂直排列 */
-  gap: 12px; /* 选项间距 */
-  margin: 15px 0;
+  justify-content: space-between;
+  margin-top: 25px;
+  gap: 15px;
 }
 
-.options label {
-  display: flex;
-  align-items: center;
-  padding: 12px 20px;
-  background: white;
-  border: 1px solid #e0e0e0;
+#prev-btn {
+  /* 中性色表示返回操作 */
+  background-color: #95a5a6;
+  border: 1px solid #7f8c8d;
+  color: white;
+}
+
+#prev-btn:hover:not(:disabled) {
+  background-color: #7f8c8d;
+}
+
+#next-btn {
+  /* 主题色表示前进操作 */
+  background-color: #3498db;
+  border: 1px solid #2980b9;
+  color: white;
+}
+
+#next-btn:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+/* 通用按钮样式 */
+.navigation button {
+  flex: 1;
+  padding: 12px 25px;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%; /* 占满整行 */
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 500;
 }
 
-/* 自定义单选按钮样式 */
-.custom-radio {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 2px solid #95a5a6;
-  border-radius: 50%;
-  margin-right: 10px;
-  position: relative;
-  transition: all 0.2s;
+/* 禁用状态样式 */
+.navigation button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #bdc3c7;
+  border-color: #95a5a6;
 }
 
-input[type="radio"]:checked + .custom-radio {
-  border-color: #3498db;
-  background: #3498db radial-gradient(circle at center, white 0%, white 40%, transparent 50%);
-}
-
-/* 选中状态 */
-.options label.selected {
-  background: #3498db;
-  color: white;
-  border-color: #2980b9;
-}
-
-/* 悬停效果 */
-.options label:hover {
-  background: #f8f9fa;
-  border-color: #3498db;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
-}
-
-/* 其他保持不变的样式 */
-.loading {
-  text-align: center;
-  color: #7f8c8d;
-  padding: 20px;
+/* 移动端适配 */
+@media (max-width: 480px) {
+  .navigation {
+    flex-direction: column;
+  }
+  
+  .navigation button {
+    width: 100%;
+    padding: 10px 20px;
+  }
 }
