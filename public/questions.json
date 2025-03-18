@@ -22,90 +22,53 @@
     "question": "q",
     "options": ["a", "b", "c", "d"],
     "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
-    "id": 2,
-    "question": "q",
-    "options": ["a", "b", "c", "d"],
-    "answer": "a"
-  }, {
+  }, 
+  {
     "id": 2,
     "question": "q",
     "options": ["a", "b", "c", "d"],
     "answer": "a"
   }, 
+  {
+    "id": 2,
+    "question": "q",
+    "options": ["a", "b", "c", "d"],
+    "answer": "a"
+  }, 
+  {
+    "id": 2,
+    "question": "q",
+    "options": ["a", "b", "c", "d"],
+    "answer": "a"
+  }, 
+  {
+    "id": 2,
+    "question": "q",
+    "options": ["a", "b", "c", "d"],
+    "answer": "a"
+  }, 
+  {
+    "id": 2,
+    "question": "q",
+    "options": ["a", "b", "c", "d"],
+    "answer": "a"
+  }, 
+  {
+    "id": 2,
+    "question": "q",
+    "options": ["a", "b", "c", "d"],
+    "answer": "a"
+  }, 
+  {
+    "id": 2,
+    "question": "q",
+    "options": ["a", "b", "c", "d"],
+    "answer": "a"
+  }, 
+  {
+    "id": 2,
+    "question": "q",
+    "options": ["a", "b", "c", "d"],
+    "answer": "a"
+  }，   
 ]
