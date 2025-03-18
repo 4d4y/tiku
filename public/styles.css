@@ -1,94 +1,27 @@
-/* 控制栏样式保持不变 */
-.controls {
-  margin: 20px 0;
-  display: flex;
-  gap: 15px;
-  justify-content: center;
+/* 确保选项容器使用block布局 */
+.options-container {
+  display: block !important; /* 强制覆盖可能存在的其他布局 */
+  width: 100%;
 }
 
-/* 题目选项垂直排列修改 */
-.question-options {
-  display: flex;
-  flex-direction: column;  /* 关键修改：垂直排列 */
-  gap: 12px;
-  margin: 15px 0;
-}
-
+/* 每个选项独占一行 */
 .option-item {
-  padding: 12px 20px;
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;  /* 保证占满整行 */
-  box-sizing: border-box;
+  display: block !important;
+  width: 100% !important;
+  margin: 8px 0;
+  clear: both;
 }
 
-/* 悬停效果优化 */
-.option-item:hover {
-  background: #f8f9fa;
-  border-color: #3498db;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
-}
-
-/* 选中状态 */
-.option-item.selected {
-  background: #3498db;
-  color: white;
-  border-color: #2980b9;
-}
-
-/* 其他原有样式保持不变 */
-#mode-select {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-#start-btn {
-  padding: 8px 20px;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-#start-btn:hover {
-  background-color: #2980b9;
-}
-
-.navigation {
+/* 或者使用flex方案 */
+.options-grid {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 20px 0;
+  flex-direction: column;
+  gap: 10px;
 }
 
-#prev-btn, #next-btn {
-  padding: 10px 25px;
-  background-color: #2ecc71;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-#prev-btn:disabled, #next-btn:disabled {
-  background-color: #95a5a6;
-  cursor: not-allowed;
-}
-
-.category {
-  color: #7f8c8d;
-  font-size: 0.9em;
-  margin-bottom: 10px;
-}
-
-#progress {
-  font-weight: bold;
-  color: #2c3e50;
+/* 强制清除浮动（如果存在） */
+.question-item::after {
+  content: "";
+  display: table;
+  clear: both;
 }
