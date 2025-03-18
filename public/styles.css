@@ -1,64 +1,60 @@
-/* styles.css */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    line-height: 1.6;
+/* styles.css 新增部分 */
+.controls {
+    margin: 20px 0;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
 }
 
-.question-box {
-    border: 1px solid #e0e0e0;
-    padding: 20px;
-    margin-bottom: 25px;
-    border-radius: 10px;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+#mode-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
-.options label {
-    display: block;
-    margin: 10px 0;
-    padding: 12px;
-    border-radius: 6px;
-    transition: background 0.3s;
+#start-btn {
+    padding: 8px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.options label:hover {
-    background: #f5f5f5;
+#start-btn:hover {
+    background-color: #2980b9;
 }
 
-input[type="radio"] {
-    margin-right: 10px;
-    transform: scale(1.1);
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
 }
 
-.feedback {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 6px;
-    display: none;
+#prev-btn, #next-btn {
+    padding: 10px 25px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
 }
 
-.feedback.correct {
-    display: block;
-    background: #e6ffe6;
-    border: 1px solid #4CAF50;
-    color: #2e7d32;
+#prev-btn:disabled, #next-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
 }
 
-.feedback.incorrect {
-    display: block;
-    background: #ffebee;
-    border: 1px solid #ff5722;
-    color: #d32f2f;
+.category {
+    color: #7f8c8d;
+    font-size: 0.9em;
+    margin-bottom: 10px;
 }
 
-#total-result {
-    margin-top: 30px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    text-align: center;
+#progress {
+    font-weight: bold;
+    color: #2c3e50;
 }
-
