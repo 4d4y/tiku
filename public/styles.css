@@ -1,197 +1,60 @@
-/* 知识题库 - 高级美化版 */
-:root {
-  --primary: #4361ee;         /* 主色调 */
-  --secondary: #3a0ca3;       /* 辅色调 */
-  --background: #f8f9ff;      /* 背景色 */
-  --surface: #ffffff;         /* 卡片背景 */
-  --text-primary: #2b2d42;    /* 主文本 */
-  --text-secondary: #8d99ae;  /* 次文本 */
-  --shadow-intensity: 0.15;   /* 阴影强度 */
+/* styles.css 新增部分 */
+.controls {
+    margin: 20px 0;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
 }
 
-/* 基础样式 */
-body {
-  background: var(--background);
-  font-family: 'Inter', system-ui;
-  line-height: 1.6;
+#mode-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
-.quiz-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
+#start-btn {
+    padding: 8px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-/* 分类卡片 - 玻璃拟态效果 */
-.category-card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
-  border-radius: 16px;
-  padding: 2rem;
-  margin: 2rem 0;
-  box-shadow: 
-    8px 8px 16px rgba(0, 0, 0, calc(var(--shadow-intensity) * 0.8)),
-    -8px -8px 16px rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+#start-btn:hover {
+    background-color: #2980b9;
 }
 
-.category-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 
-    12px 12px 24px rgba(0, 0, 0, calc(var(--shadow-intensity) * 1.2)),
-    -12px -12px 24px rgba(255, 255, 255, 0.9);
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
 }
 
-/* 分类标题 */
-.category-header {
-  text-align: center;
-  margin-bottom: 2rem;
-  position: relative;
-  padding-bottom: 1.5rem;
+#prev-btn, #next-btn {
+    padding: 10px 25px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
 }
 
-.category-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
+#prev-btn:disabled, #next-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
 }
 
-.category-name {
-  color: var(--text-primary);
-  font-size: 2.2rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  margin: 0.5em 0;
+.category {
+    color: #7f8c8d;
+    font-size: 0.9em;
+    margin-bottom: 10px;
 }
 
-/* 题目卡片 */
-.question-card {
-  background: var(--surface);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.question-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: linear-gradient(180deg, var(--primary), var(--secondary));
-  border-radius: 12px 0 0 12px;
-}
-
-.question-text {
-  color: var(--text-primary);
-  font-size: 1.1rem;
-  margin: 0 0 1.2rem 1rem;
-  font-weight: 500;
-}
-
-/* 选项网格 */
-.options-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-left: 1rem;
-}
-
-.option-item {
-  background: var(--surface);
-  padding: 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: 
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.option-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-/* 选中状态 */
-.option-item.selected {
-  background: var(--primary);
-  color: white;
-  box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
-}
-
-/* 答案展示区 */
-.answer-section {
-  margin: 1.5rem 0 0 1rem;
-  padding: 1.5rem;
-  background: rgba(67, 97, 238, 0.05);
-  border-radius: 8px;
-  border-left: 3px solid var(--primary);
-}
-
-.answer-label {
-  color: var(--primary);
-  font-weight: 600;
-  margin-bottom: 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.answer-label::before {
-  content: '✓';
-  font-size: 1.2em;
-}
-
-/* 响应式布局 */
-@media (max-width: 768px) {
-  .quiz-container {
-    padding: 1rem;
-  }
-  
-  .options-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .category-name {
-    font-size: 1.8rem;
-  }
-}
-
-@media (min-width: 1200px) {
-  .category-card {
-    padding: 2.5rem;
-  }
-  
-  .question-card {
-    padding: 2rem;
-  }
-}
-
-/* 动态效果 */
-@keyframes cardEntrance {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.category-card {
-  animation: cardEntrance 0.6s ease forwards;
+#progress {
+    font-weight: bold;
+    color: #2c3e50;
 }
