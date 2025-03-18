@@ -1,60 +1,143 @@
-/* styles.css 新增部分 */
-.controls {
-    margin: 20px 0;
-    display: flex;
-    gap: 15px;
-    justify-content: center;
+/* 知识题库专用样式 - 适配JSON数据结构 */
+.quiz-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 5%;
+  font-family: 'Helvetica Neue', system-ui;
 }
 
-#mode-select {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+/* 分类容器 */
+.category-block {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin: 2rem 0;
+  padding: 2rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#start-btn {
-    padding: 8px 20px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+.category-block:hover {
+  transform: translateY(-5px);
 }
 
-#start-btn:hover {
-    background-color: #2980b9;
+/* 分类标题 */
+.category-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 3px solid #e8e9eb;
 }
 
-.navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 0;
+.category-id {
+  display: inline-block;
+  background: #2c3e50;
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9em;
+  margin-bottom: 0.8rem;
 }
 
-#prev-btn, #next-btn {
-    padding: 10px 25px;
-    background-color: #2ecc71;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: opacity 0.2s;
+.category-name {
+  color: #2c3e50;
+  font-size: 2em;
+  font-weight: 600;
 }
 
-#prev-btn:disabled, #next-btn:disabled {
-    background-color: #95a5a6;
-    cursor: not-allowed;
+/* 题目列表 */
+.question-list {
+  display: grid;
+  gap: 1.5rem;
 }
 
-.category {
-    color: #7f8c8d;
-    font-size: 0.9em;
-    margin-bottom: 10px;
+/* 单个题目 */
+.question-card {
+  background: #f8f9fb;
+  border-radius: 10px;
+  padding: 1.5rem;
+  border-left: 4px solid #3498db;
 }
 
-#progress {
-    font-weight: bold;
-    color: #2c3e50;
+.question-id {
+  color: #7f8c8d;
+  font-size: 0.9em;
+  margin-bottom: 0.5rem;
+}
+
+.question-text {
+  color: #34495e;
+  font-size: 1.2em;
+  line-height: 1.4;
+  margin-bottom: 1.2rem;
+}
+
+/* 选项布局 */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.8rem;
+}
+
+.option-item {
+  background: white;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-align: center;
+}
+
+.option-item:hover {
+  background: #f0f4f8;
+  transform: translateX(5px);
+}
+
+/* 答案说明 */
+.answer-section {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f1f8ff;
+  border-radius: 8px;
+  border: 1px dashed #3498db;
+}
+
+.answer-label {
+  color: #3498db;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.explanation-text {
+  color: #7f8c8d;
+  line-height: 1.5;
+}
+
+/* 响应式布局 */
+@media (min-width: 768px) {
+  .quiz-container {
+    padding: 3rem 8%;
+  }
+  
+  .options-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .category-blocks {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  
+  .question-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1600px) {
+  .category-blocks {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
