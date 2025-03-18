@@ -1,68 +1,94 @@
-/* 原始样式加强版 - 垂直选项排列 */
-.quiz-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Segoe UI', system-ui;
-  background: #f5f6fa;
+/* 控制栏样式保持不变 */
+.controls {
+  margin: 20px 0;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
 }
 
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
+/* 题目选项垂直排列修改 */
+.question-options {
+  display: flex;
+  flex-direction: column;  /* 关键修改：垂直排列 */
+  gap: 12px;
+  margin: 15px 0;
 }
 
-.category-card {
+.option-item {
+  padding: 12px 20px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  padding: 1.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;  /* 保证占满整行 */
+  box-sizing: border-box;
 }
 
-.category-title {
-  color: #2c3e50;
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #eee;
-}
-
-.question-item {
-  padding: 1rem;
-  margin: 1rem 0;
+/* 悬停效果优化 */
+.option-item:hover {
   background: #f8f9fa;
-  border-left: 4px solid #3498db;
+  border-color: #3498db;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
 }
 
-/* 修改重点：垂直排列选项 */
-.options-grid {
-  display: grid;
-  gap: 0.8rem;
-  grid-template-columns: 1fr; /* 始终单列 */
+/* 选中状态 */
+.option-item.selected {
+  background: #3498db;
+  color: white;
+  border-color: #2980b9;
 }
 
-.option {
-  padding: 0.8rem;
-  background: white;
-  border: 1px solid #eee;
-  border-radius: 6px;
-  transition: all 0.2s;
+/* 其他原有样式保持不变 */
+#mode-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
-.option:hover {
-  background: #f0f4f8;
-  transform: none; /* 移除缩放效果 */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+#start-btn {
+  padding: 8px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-/* 响应式调整 */
-@media (max-width: 768px) {
-  .categories-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .category-card {
-    margin: 1rem 0;
-  }
+#start-btn:hover {
+  background-color: #2980b9;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+#prev-btn, #next-btn {
+  padding: 10px 25px;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+#prev-btn:disabled, #next-btn:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.category {
+  color: #7f8c8d;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+#progress {
+  font-weight: bold;
+  color: #2c3e50;
 }
