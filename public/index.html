@@ -57,11 +57,12 @@
         // 检查答案
         function checkAnswer(selectedOption, correctAnswer) {
             const feedback = document.getElementById('feedback');
-            if (selectedOption.startsWith(correctAnswer)) {
+            const selectedAnswer = selectedOption.split('、')[0]; // 提取用户选择的答案字母（如 "A"）
+            if (selectedAnswer === correctAnswer) {
                 feedback.textContent = '回答正确！';
                 feedback.style.color = 'green';
             } else {
-                feedback.textContent = '回答错误！';
+                feedback.textContent = `回答错误！正确答案是：${correctAnswer}`;
                 feedback.style.color = 'red';
             }
         }
