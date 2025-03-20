@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <!-- 密码验证界面 -->
+    <div id="password-container" class="password-container">
+        <h1>请输入访问密码</h1>
+        <input type="password" id="password-input" placeholder="输入密码">
+        <button id="submit-password">提交</button>
+        <p id="password-error" class="error-message"></p>
+    </div>
+
+    <!-- 刷题应用界面（默认隐藏） -->
+    <div id="app-container" class="container" style="display: none;">
         <h1>深农在线刷题</h1>
         <div class="controls">
             <label for="category-select">选择分类：</label>
@@ -31,7 +40,35 @@
         </div>
         <div id="feedback"></div>
     </div>
+
     <script>
+        // 密码验证逻辑
+        const correctPassword = "nchjx"; // 设置访问密码
+        const passwordContainer = document.getElementById('password-container');
+        const appContainer = document.getElementById('app-container');
+        const passwordInput = document.getElementById('password-input');
+        const submitPasswordBtn = document.getElementById('submit-password');
+        const passwordError = document.getElementById('password-error');
+
+        submitPasswordBtn.addEventListener('click', () => {
+            const enteredPassword = passwordInput.value.trim();
+            if (enteredPassword === correctPassword) {
+                passwordContainer.style.display = 'none'; // 隐藏密码界面
+                appContainer.style.display = 'block'; // 显示刷题应用
+                loadQuestions(); // 加载题库数据
+            } else {
+                passwordError.textContent = '密码错误，请重试！';
+            }
+        });
+
+        // 按下回车键提交密码
+        passwordInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                submitPasswordBtn.click();
+            }
+        });
+
+        // 以下是刷题应用的逻辑（保持不变）
         let categories = []; // 存储分类数据
         let questions = []; // 存储当前分类的题目
         let currentQuestionIndex = 0; // 当前题目索引
@@ -91,8 +128,8 @@
         // 检查答案
         function checkAnswer(selectedOption, correctAnswer) {
             const feedback = document.getElementById('feedback');
-            const selectedAnswer = selectedOption.split('、')[0]; // 提取用户选择的答案字母（如 "A"）
-            if (selectedAnswer === correctAnswer) {
+            const selectedAnswer = selectedOption.split('、')[0].trim(); // 提取用户选择的答案字母（如 "A"），并去除空格
+            if (selectedAnswer === correctAnswer.trim()) { // 确保正确答案去除空格
                 feedback.textContent = '回答正确！';
                 feedback.style.color = 'green';
             } else {
@@ -145,8 +182,6 @@
         document.getElementById('reset-btn').addEventListener('click', resetOrder);
         document.getElementById('prev-btn').addEventListener('click', prevQuestion);
         document.getElementById('next-btn').addEventListener('click', nextQuestion);
-
-        loadQuestions(); // 加载题库数据
     </script>
 </body>
 </html>
