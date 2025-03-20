@@ -10,8 +10,16 @@
     <div class="container">
         <h1>在线刷题</h1>
         <div class="controls">
+            <label for="category-select">选择分类：</label>
+            <select id="category-select">
+                <option value="all">全部</option>
+                <!-- 动态加载分类 -->
+            </select>
             <button id="shuffle-btn">随机出题</button>
             <button id="reset-btn">顺序出题</button>
+        </div>
+        <div id="stats">
+            <p>已做：<span id="done-count">0</span> / 总共：<span id="total-count">0</span></p>
         </div>
         <div id="question-container">
             <h2 id="question"></h2>
@@ -24,7 +32,8 @@
         <div id="feedback"></div>
     </div>
     <script>
-        let questions = []; // 存储题库数据
+        let categories = []; // 存储分类数据
+        let questions = []; // 存储当前分类的题目
         let currentQuestionIndex = 0; // 当前题目索引
         let shuffledQuestions = []; // 随机排序后的题目
 
@@ -33,11 +42,35 @@
             try {
                 const response = await fetch('questions.json');
                 const data = await response.json();
-                questions = data.categories.flatMap(category => category.questions); // 将所有题目合并为一个数组
-                resetOrder(); // 初始化题目顺序
+                categories = data.categories; // 存储分类数据
+                populateCategorySelect(); // 填充分类选择下拉菜单
+                selectCategory('all'); // 默认选择全部分类
             } catch (error) {
                 console.error('加载题库失败:', error);
             }
+        }
+
+        // 填充分类选择下拉菜单
+        function populateCategorySelect() {
+            const categorySelect = document.getElementById('category-select');
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        // 选择分类
+        function selectCategory(categoryId) {
+            if (categoryId === 'all') {
+                questions = categories.flatMap(category => category.questions); // 选择全部题目
+            } else {
+                const selectedCategory = categories.find(category => category.id === categoryId);
+                questions = selectedCategory ? selectedCategory.questions : []; // 选择指定分类的题目
+            }
+            resetOrder(); // 初始化题目顺序
+            updateStats(); // 更新统计信息
         }
 
         // 显示题目
@@ -97,7 +130,16 @@
             }
         }
 
+        // 更新统计信息
+        function updateStats() {
+            document.getElementById('done-count').textContent = currentQuestionIndex + 1;
+            document.getElementById('total-count').textContent = shuffledQuestions.length;
+        }
+
         // 初始化
+        document.getElementById('category-select').addEventListener('change', (event) => {
+            selectCategory(event.target.value);
+        });
         document.getElementById('shuffle-btn').addEventListener('click', shuffleQuestions);
         document.getElementById('reset-btn').addEventListener('click', resetOrder);
         document.getElementById('prev-btn').addEventListener('click', prevQuestion);
