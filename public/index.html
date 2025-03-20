@@ -1,182 +1,143 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分类题库测试</title>
-    <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 增强型选项容器 */
+    .options {
+      margin: 1.5rem 0;
+      counter-reset: option-counter;
+    }
+
+    /* 选项标签样式 */
+    .option-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      margin: 0.8rem 0;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    /* 选项字母标识 */
+    .option-item::before {
+      content: attr(data-label);
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #3498db;
+      color: white;
+      text-align: center;
+      line-height: 24px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    /* 选中状态 */
+    .option-item.selected {
+      border-color: #3498db;
+      background: #f0f8ff;
+    }
+
+    /* 正确答案标记 */
+    .option-item.correct::after {
+      content: '✓';
+      color: #2ecc71;
+      margin-left: auto;
+    }
+
+    /* 错误答案标记 */
+    .option-item.wrong::after {
+      content: '✕';
+      color: #e74c3c;
+      margin-left: auto;
+    }
+
+    /* 导航按钮容器 */
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    /* 通用按钮样式 */
+    button {
+      flex: 1;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    /* 上一题按钮 */
+    #prevBtn {
+      background: #95a5a6;
+      color: white;
+    }
+
+    /* 下一题按钮 */
+    #nextBtn {
+      background: #3498db;
+      color: white;
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 480px) {
+      .option-item {
+        padding: 0.8rem;
+      }
+      
+      button {
+        padding: 0.6rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>分类知识测验</h1>
-        <div class="controls">
-            <select id="mode-select">
-                <option value="sequential">顺序出题</option>
-                <option value="random">随机出题</option>
-            </select>
-            <button id="start-btn">开始测验</button>
-        </div>
-        <div id="quiz-container">
-            <div class="loading">请选择测验模式后点击开始</div>
-        </div>
-        <div class="navigation">
-            <button id="prev-btn" disabled>上一题</button>
-            <span id="progress"></span>
-            <button id="next-btn" disabled>下一题</button>
-        </div>
-        <div id="total-result"></div>
+  <div class="quiz-container">
+    <div class="question"></div>
+    <div class="options"></div>
+    <div class="nav-buttons">
+      <button id="prevBtn">上一题</button>
+      <button id="nextBtn">下一题</button>
     </div>
+  </div>
 
-<script>
-const quizState = {
-    questions: [],
-    currentIndex: -1,
-    mode: 'sequential',
-    userAnswers: {},
-    questionOrder: []
-};
+  <script>
+    // 初始化题库数据
+    const quizData = { /* 原始题库数据 */ };
 
-// 初始化控件
-document.getElementById('mode-select').addEventListener('change', e => {
-    quizState.mode = e.target.value;
-});
-
-document.getElementById('start-btn').addEventListener('click', initQuiz);
-document.getElementById('prev-btn').addEventListener('click', showPreviousQuestion);
-document.getElementById('next-btn').addEventListener('click', showNextQuestion);
-
-async function initQuiz() {
-    try {
-        const response = await fetch('./questions.json');
-        if (!response.ok) throw new Error('题库加载失败');
-        const data = await response.json();
-        
-        // 合并所有分类题目并添加分类前缀
-        quizState.questions = data.categories.flatMap(category => 
-            category.questions.map(q => ({
-                ...q,
-                fullId: `${category.id}-${q.id}`,
-                category: category.name
-            }))
-        );
-        
-        prepareQuestions();
-        quizState.currentIndex = 0;
-        updateControls();
-        renderQuestion();
-    } catch (error) {
-        showError(error.message);
+    // 答案提取逻辑（兼容带"答案："前缀的格式）
+    function normalizeAnswer(answerStr) {
+      return answerStr.replace(/答案：|。/g, '').trim().toUpperCase();
     }
-}
 
-function prepareQuestions() {
-    if (quizState.mode === 'random') {
-        // Fisher-Yates shuffle算法
-        const arr = [...Array(quizState.questions.length).keys()];
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        quizState.questionOrder = arr;
-    } else {
-        quizState.questionOrder = [...Array(quizState.questions.length).keys()];
+    // 选项渲染函数
+    function renderOptions(options) {
+      return options.map(opt => {
+        const label = opt.split('、');
+        return `
+          <div class="option-item" data-label="${label}" data-value="${label}">
+            ${opt.replace(label+'、', '')}
+          </div>
+        `;
+      }).join('');
     }
-}
 
-function renderQuestion() {
-    const index = quizState.questionOrder[quizState.currentIndex];
-    const question = quizState.questions[index];
-    const container = document.getElementById('quiz-container');
-    
-    container.innerHTML = `
-        <div class="question-box">
-            <div class="category">分类：${question.category}</div>
-            <h3>${question.fullId}. ${question.question}</h3>
-            <div class="options">
-                ${question.options.map(opt => `
-                    <label>
-                        <input type="radio" name="current" value="${opt}" 
-                            ${quizState.userAnswers[question.fullId] === opt ? 'checked' : ''}>
-                        <span class="custom-radio"></span>
-                        <span class="option-text">${opt}</span>
-                    </label>
-                `).join('')}
-            </div>
-            <div class="feedback" id="feedback"></div>
-        </div>
-    `;
-
-    // 为选项添加事件监听
-    container.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            const userAnswer = e.target.value;
-            quizState.userAnswers[question.fullId] = userAnswer;
-            checkAnswer(question, userAnswer);
-            updateTotalResult();
-            updateControls();
-        });
-    });
-
-    updateProgress();
-}
-
-function checkAnswer(question, selectedAnswer) {
-    const feedbackDiv = document.getElementById('feedback');
-    feedbackDiv.className = `feedback ${selectedAnswer === question.answer ? 
-        'correct' : 'incorrect'} visible`;
-    
-    feedbackDiv.innerHTML = selectedAnswer === question.answer ?
-        `✅ 正确！${question.explanation || ''}` :
-        `❌ 错误，正确答案：${question.answer}${question.explanation ? 
-            `（${question.explanation}）` : ''}`;
-}
-
-function showPreviousQuestion() {
-    if (quizState.currentIndex > 0) {
-        quizState.currentIndex--;
-        renderQuestion();
-        updateControls();
+    // 状态更新逻辑
+    function updateSelection(selectedItem) {
+      document.querySelectorAll('.option-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+      selectedItem.classList.add('selected');
     }
-}
 
-function showNextQuestion() {
-    if (quizState.currentIndex < quizState.questionOrder.length - 1) {
-        quizState.currentIndex++;
-        renderQuestion();
-        updateControls();
-    }
-}
-
-function updateControls() {
-    document.getElementById('prev-btn').disabled = quizState.currentIndex === 0;
-    document.getElementById('next-btn').disabled = 
-        quizState.currentIndex === quizState.questionOrder.length - 1;
-}
-
-function updateProgress() {
-    const progress = document.getElementById('progress');
-    progress.textContent = `第 ${quizState.currentIndex + 1} 题 / 共 ${quizState.questionOrder.length} 题`;
-}
-
-function updateTotalResult() {
-    const correctCount = Object.keys(quizState.userAnswers).filter(fullId => {
-        const question = quizState.questions.find(q => q.fullId === fullId);
-        return quizState.userAnswers[fullId] === question.answer;
-    }).length;
-
-    const resultDiv = document.getElementById('total-result');
-    resultDiv.innerHTML = `
-        <div class="result-box">
-            已答对：${correctCount} 题 (${Math.round((correctCount/quizState.questionOrder.length)*100)}%)
-        </div>
-    `;
-}
-
-function showError(message) {
-    const container = document.getElementById('quiz-container');
-    container.innerHTML = `<div class="error">${message}</div>`;
-}
-</script>
+    // 完整实现代码...
+  </script>
 </body>
 </html>
