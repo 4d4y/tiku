@@ -10,52 +10,77 @@
     <div class="container">
         <h1>在线刷题</h1>
         <div class="controls">
-            <button onclick="shuffleQuestions()">随机出题</button>
-            <button onclick="resetOrder()">顺序出题</button>
+            <button id="shuffle-btn">随机出题</button>
+            <button id="reset-btn">顺序出题</button>
         </div>
         <div id="question-container">
             <h2 id="question"></h2>
             <div id="options"></div>
         </div>
         <div class="navigation">
-            <button onclick="prevQuestion()">上一题</button>
-            <button onclick="nextQuestion()">下一题</button>
+            <button id="prev-btn">上一题</button>
+            <button id="next-btn">下一题</button>
         </div>
         <div id="feedback"></div>
     </div>
     <script>
-        const questions = [questions.json
-            // 示例题库数据
-            // 这里应该填充完整的题库数据
-        ];
+        let questions = []; // 存储题库数据
+        let currentQuestionIndex = 0; // 当前题目索引
+        let shuffledQuestions = []; // 随机排序后的题目
 
-        let currentQuestionIndex = 0;
-        let shuffledQuestions = [];
+        // 加载题库数据
+        async function loadQuestions() {
+            try {
+                const response = await fetch('questions.json');
+                const data = await response.json();
+                questions = data.categories.flatMap(category => category.questions); // 将所有题目合并为一个数组
+                resetOrder(); // 初始化题目顺序
+            } catch (error) {
+                console.error('加载题库失败:', error);
+            }
+        }
 
+        // 显示题目
         function displayQuestion(index) {
             const question = shuffledQuestions[index];
             document.getElementById('question').textContent = question.question;
             const optionsHtml = question.options.map(option => 
                 `<div>
-                    <input type="radio" name="option" value="${option}">
+                    <input type="radio" name="option" value="${option}" onchange="checkAnswer('${option}', '${question.answer}')">
                     <label>${option}</label>
                 </div>`
             ).join('');
             document.getElementById('options').innerHTML = optionsHtml;
+            document.getElementById('feedback').textContent = ''; // 清空反馈
         }
 
+        // 检查答案
+        function checkAnswer(selectedOption, correctAnswer) {
+            const feedback = document.getElementById('feedback');
+            if (selectedOption.startsWith(correctAnswer)) {
+                feedback.textContent = '回答正确！';
+                feedback.style.color = 'green';
+            } else {
+                feedback.textContent = '回答错误！';
+                feedback.style.color = 'red';
+            }
+        }
+
+        // 随机出题
         function shuffleQuestions() {
             shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
             currentQuestionIndex = 0;
             displayQuestion(currentQuestionIndex);
         }
 
+        // 顺序出题
         function resetOrder() {
             shuffledQuestions = [...questions];
             currentQuestionIndex = 0;
             displayQuestion(currentQuestionIndex);
         }
 
+        // 上一题
         function prevQuestion() {
             if (currentQuestionIndex > 0) {
                 currentQuestionIndex--;
@@ -63,6 +88,7 @@
             }
         }
 
+        // 下一题
         function nextQuestion() {
             if (currentQuestionIndex < shuffledQuestions.length - 1) {
                 currentQuestionIndex++;
@@ -71,7 +97,12 @@
         }
 
         // 初始化
-        resetOrder();
+        document.getElementById('shuffle-btn').addEventListener('click', shuffleQuestions);
+        document.getElementById('reset-btn').addEventListener('click', resetOrder);
+        document.getElementById('prev-btn').addEventListener('click', prevQuestion);
+        document.getElementById('next-btn').addEventListener('click', nextQuestion);
+
+        loadQuestions(); // 加载题库数据
     </script>
 </body>
 </html>
