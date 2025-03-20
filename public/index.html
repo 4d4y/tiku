@@ -1,143 +1,264 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <style>
-    /* 增强型选项容器 */
-    .options {
-      margin: 1.5rem 0;
-      counter-reset: option-counter;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线刷题系统 - 深农投题库</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --correct-color: #2ecc71;
+            --wrong-color: #e74c3c;
+        }
 
-    /* 选项标签样式 */
-    .option-item {
-      display: flex;
-      align-items: center;
-      padding: 1rem;
-      margin: 0.8rem 0;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      background: white;
-    }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f6fa;
+        }
 
-    /* 选项字母标识 */
-    .option-item::before {
-      content: attr(data-label);
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #3498db;
-      color: white;
-      text-align: center;
-      line-height: 24px;
-      margin-right: 12px;
-      flex-shrink: 0;
-    }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
 
-    /* 选中状态 */
-    .option-item.selected {
-      border-color: #3498db;
-      background: #f0f8ff;
-    }
+        /* 分类选择样式 */
+        .category-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
 
-    /* 正确答案标记 */
-    .option-item.correct::after {
-      content: '✓';
-      color: #2ecc71;
-      margin-left: auto;
-    }
+        .category-btn {
+            padding: 20px;
+            background: white;
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: bold;
+        }
 
-    /* 错误答案标记 */
-    .option-item.wrong::after {
-      content: '✕';
-      color: #e74c3c;
-      margin-left: auto;
-    }
+        .category-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
 
-    /* 导航按钮容器 */
-    .nav-buttons {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
+        /* 题目容器 */
+        .question-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: none;
+        }
 
-    /* 通用按钮样式 */
-    button {
-      flex: 1;
-      padding: 0.8rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
+        .question-header {
+            color: var(--primary-color);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
 
-    /* 上一题按钮 */
-    #prevBtn {
-      background: #95a5a6;
-      color: white;
-    }
+        /* 选项样式 */
+        .options-container {
+            display: grid;
+            gap: 10px;
+        }
 
-    /* 下一题按钮 */
-    #nextBtn {
-      background: #3498db;
-      color: white;
-    }
+        .option {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-    /* 移动端适配 */
-    @media (max-width: 480px) {
-      .option-item {
-        padding: 0.8rem;
-      }
-      
-      button {
-        padding: 0.6rem;
-      }
-    }
-  </style>
+        .option:hover {
+            background: #f8f9fa;
+            transform: translateX(5px);
+        }
+
+        .option.correct {
+            background: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+
+        .option.wrong {
+            background: var(--wrong-color);
+            color: white;
+            border-color: var(--wrong-color);
+        }
+
+        /* 进度条 */
+        .progress-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--secondary-color);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        /* 得分显示 */
+        .score-board {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .restart-btn {
+            padding: 10px 30px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .category-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .option {
+                padding: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="quiz-container">
-    <div class="question"></div>
-    <div class="options"></div>
-    <div class="nav-buttons">
-      <button id="prevBtn">上一题</button>
-      <button id="nextBtn">下一题</button>
+    <div class="container">
+        <h1>深农投在线刷题系统</h1>
+        <div class="category-container" id="categoryContainer"></div>
+        <div class="question-container" id="questionContainer">
+            <div class="question-header">
+                <h2 id="questionText"></h2>
+                <div>当前进度：<span id="currentCount">0</span>/<span id="totalCount">0</span></div>
+            </div>
+            <div class="options-container" id="optionsContainer"></div>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+        </div>
+        <div class="score-board" id="scoreBoard">
+            <h2>答题完成！</h2>
+            <p>您的得分是：<span id="score">0</span>分</p>
+            <button class="restart-btn" onclick="location.reload()">重新开始</button>
+        </div>
     </div>
-  </div>
 
-  <script>
-    // 初始化题库数据
-    const quizData = { /* 原始题库数据 */ };
+    <script>
+        const questionBank = { /* 这里插入提供的完整题库JSON */ };
 
-    // 答案提取逻辑（兼容带"答案："前缀的格式）
-    function normalizeAnswer(answerStr) {
-      return answerStr.replace(/答案：|。/g, '').trim().toUpperCase();
-    }
+        let currentCategory = null;
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
 
-    // 选项渲染函数
-    function renderOptions(options) {
-      return options.map(opt => {
-        const label = opt.split('、');
-        return `
-          <div class="option-item" data-label="${label}" data-value="${label}">
-            ${opt.replace(label+'、', '')}
-          </div>
-        `;
-      }).join('');
-    }
+        // 初始化分类选择
+        function initCategories() {
+            const container = document.getElementById('categoryContainer');
+            questionBank.categories.forEach(category => {
+                const button = document.createElement('div');
+                button.className = 'category-btn';
+                button.textContent = category.name;
+                button.onclick = () => startQuiz(category.id);
+                container.appendChild(button);
+            });
+        }
 
-    // 状态更新逻辑
-    function updateSelection(selectedItem) {
-      document.querySelectorAll('.option-item').forEach(item => {
-        item.classList.remove('selected');
-      });
-      selectedItem.classList.add('selected');
-    }
+        // 开始答题
+        function startQuiz(categoryId) {
+            document.getElementById('categoryContainer').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            
+            currentCategory = questionBank.categories.find(c => c.id === categoryId);
+            currentQuestions = currentCategory.questions;
+            
+            updateProgress();
+            showQuestion();
+        }
 
-    // 完整实现代码...
-  </script>
+        // 显示题目
+        function showQuestion() {
+            const question = currentQuestions[currentIndex];
+            document.getElementById('questionText').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.innerHTML = option;
+                div.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(div);
+            });
+        }
+
+        // 检查答案
+        function checkAnswer(selected) {
+            const correctAnswer = currentQuestions[currentIndex].answer;
+            const options = document.getElementsByClassName('option');
+            
+            Array.from(options).forEach(option => {
+                option.style.pointerEvents = 'none'; // 禁用点击
+                if (option.innerHTML === correctAnswer) {
+                    option.classList.add('correct');
+                } else if (option.innerHTML === selected) {
+                    option.classList.add('wrong');
+                }
+            });
+
+            if (selected === correctAnswer) score++;
+            
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex < currentQuestions.length) {
+                    updateProgress();
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            }, 1500);
+        }
+
+        // 更新进度
+        function updateProgress() {
+            document.getElementById('currentCount').textContent = currentIndex + 1;
+            document.getElementById('totalCount').textContent = currentQuestions.length;
+            document.getElementById('progressBar').style.width = 
+                `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
+        }
+
+        // 显示分数
+        function showScore() {
+            document.getElementById('questionContainer').style.display = 'none';
+            const scoreBoard = document.getElementById('scoreBoard');
+            scoreBoard.style.display = 'block';
+            document.getElementById('score').textContent = 
+                `${score}（正确率：${Math.round((score / currentQuestions.length) * 100)}%）`;
+        }
+
+        // 初始化
+        window.onload = initCategories;
+    </script>
 </body>
 </html>
