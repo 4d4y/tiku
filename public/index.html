@@ -85,6 +85,7 @@
             ).join('');
             document.getElementById('options').innerHTML = optionsHtml;
             document.getElementById('feedback').textContent = ''; // 清空反馈
+            updateStats(); // 更新统计信息
         }
 
         // 检查答案
