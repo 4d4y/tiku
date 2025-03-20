@@ -4,64 +4,57 @@ body {
     color: #333;
     line-height: 1.6;
     padding: 20px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-.container {
-    max-width: 600px;
-    margin: auto;
+.password-container {
+    text-align: center;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-    text-align: center;
+.password-container h1 {
+    margin-bottom: 20px;
 }
 
-.controls, .navigation {
-    text-align: center;
-    margin: 20px 0;
-}
-
-label {
-    margin-right: 10px;
-}
-
-select {
-    padding: 5px;
+.password-container input {
+    padding: 10px;
+    border: 1px solid #ccc;
     border-radius: 5px;
+    width: 200px;
+    margin-bottom: 10px;
 }
 
-button {
+.password-container button {
     background-color: #5cb85c;
     color: white;
     border: none;
     padding: 10px 20px;
-    margin: 5px;
     border-radius: 5px;
     cursor: pointer;
 }
 
-button:hover {
+.password-container button:hover {
     background-color: #4cae4c;
 }
 
-#stats {
-    text-align: center;
-    margin: 20px 0;
-    font-size: 1.1em;
+.error-message {
+    color: red;
+    margin-top: 10px;
 }
 
-#question-container {
-    margin: 20px 0;
+.container {
+    max-width: 600px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#options div {
-    margin: 10px 0;
-}
-
-#feedback {
-    margin-top: 20px;
-    font-weight: bold;
-}
+/* 其他样式保持不变 */
